@@ -78,6 +78,22 @@ require([], function(){
 
     function moveSomething(e) {
         switch (e.keyCode) {
+            case 87: // W
+                snowman.rotateY(0.2);
+                snowman.position.z += 1;
+                break;
+            case 83: //S
+                snowman.rotateY(0.2);
+                snowman.position.z -= 1;
+                break;
+            case 65: //A
+                snowman.rotateY(0.2);
+                snowman.position.x -= 1;
+                break;
+            case 68: // D
+                snowman.rotateY(0.2);
+                snowman.position.x += 1;
+                break;
             case 48:
                 break;
             case 70:
