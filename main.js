@@ -16,8 +16,8 @@ require([], function(){
     // setup a scene and camera
     var scene	= new THREE.Scene();
     var camera	= new THREE.PerspectiveCamera(60, CANVAS_WIDTH / CANVAS_HEIGHT, 0.01, 1000);
-    camera.position.y = 25;
-    camera.position.z = 30;
+    camera.position.y = 30;
+    camera.position.z = 40;
 
     var onRenderFcts= [];
 
@@ -29,15 +29,6 @@ require([], function(){
     //////////////////////////////////////////////////////////////////////////////////
 
     //TODO: Add Lighting Here
-    /*Moon Geo*/
-    var moonMat = new THREE.MeshPhongMaterial({color:0xFFFFFF});
-    var moonGeo = new THREE.SphereGeometry(1, 10, 10);
-    var moon = new THREE.Mesh(moonGeo, moonMat);
-    moon.translateY(16);
-    moon.translateZ(-23);
-    moon.translateX(-15);
-    scene.add(moon);
-
     /*Moon Light*/
     var ambientLight= new THREE.AmbientLight(0xFFFFFF);
     ambientLight.position.set(16, -23, -15);
@@ -62,11 +53,13 @@ require([], function(){
         mouse.y	= 1 - ((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height);
     }, false);
 
+    /*
     onRenderFcts.push(function(delta, now){
         camera.position.x += (mouse.x*30 - camera.position.x) * (delta*3);
         camera.position.y += (mouse.y*30 - camera.position.y) * (delta*3);
         camera.lookAt( scene.position )
     });
+    */
 
     //////////////////////////////////////////////////////////////////////////////////
     //		Button Controls							//
@@ -80,11 +73,11 @@ require([], function(){
         switch (e.keyCode) {
             case 87: // W
                 snowman.rotateY(0.2);
-                snowman.position.z += 1;
+                snowman.position.z -= 1;
                 break;
             case 83: //S
                 snowman.rotateY(0.2);
-                snowman.position.z -= 1;
+                snowman.position.z += 1;
                 break;
             case 65: //A
                 snowman.rotateY(0.2);
