@@ -29,12 +29,28 @@ require([], function(){
     //////////////////////////////////////////////////////////////////////////////////
 
     //TODO: Add Lighting Here
+    /*Moon Geo*/
+    var moonMat = new THREE.MeshPhongMaterial({color:0xFFFFFF});
+    var moonGeo = new THREE.SphereGeometry(1, 10, 10);
+    var moon = new THREE.Mesh(moonGeo, moonMat);
+    moon.translateY(16);
+    moon.translateZ(-23);
+    moon.translateX(-15);
+    scene.add(moon);
+
+    /*Moon Light*/
+    var ambientLight= new THREE.AmbientLight(0xFFFFFF);
+    ambientLight.position.set(16, -23, -15);
+    scene.add( ambientLight);
 
     //////////////////////////////////////////////////////////////////////////////////
     //		add an object and make it move					//
     //////////////////////////////////////////////////////////////////////////////////
 
     //TODO: Add Objects Here
+    var snowman = new Snowman();
+    scene.add(snowman);
+
 
     camera.lookAt(new THREE.Vector3(0, 5, 0));
     //////////////////////////////////////////////////////////////////////////////////
@@ -89,18 +105,13 @@ require([], function(){
     //		Texture Mapping						//
     //////////////////////////////////////////////////////////////////////////////////
 
-    /* Load the first texture image */
-    var grass_tex = THREE.ImageUtils.loadTexture("Textures/grass.jpg");
-    /* for repeat to work, the image size must be 2^k */
-
-    /* repeat the texture 4 times in both direction */
+    /*Ground*/
+    var grass_tex = THREE.ImageUtils.loadTexture("Images/snow.jpg");
     grass_tex.repeat.set(4,4);
     grass_tex.wrapS = THREE.RepeatWrapping;
     grass_tex.wrapT = THREE.RepeatWrapping;
-
-
     var groundPlane = new THREE.PlaneBufferGeometry(40, 40, 10, 10);
-    var groundMat = new THREE.MeshPhongMaterial({color:0x1d6438, ambient:0x1d6438, map:grass_tex});
+    var groundMat = new THREE.MeshPhongMaterial({color:0xDBFFFF, ambient:0xDBFFFF, map:grass_tex});
     var ground = new THREE.Mesh (groundPlane, groundMat);
     ground.rotateX(THREE.Math.degToRad(-90));
     scene.add (ground);
