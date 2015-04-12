@@ -1,5 +1,4 @@
 require([], function(){
-    // detect WebGL
     if( !Detector.webgl ){
         Detector.addGetWebGLMessage();
         throw 'WebGL Not Available'
@@ -16,13 +15,17 @@ require([], function(){
     // setup a scene and camera
     var scene	= new THREE.Scene();
     var camera	= new THREE.PerspectiveCamera(60, CANVAS_WIDTH / CANVAS_HEIGHT, 0.01, 1000);
-    camera.position.y = 30;
-    camera.position.z = 40;
+    camera.position.y = 25;
+    camera.position.z = 45;
 
     var onRenderFcts= [];
 
     // handle window resize events
     var winResize	= new THREEx.WindowResize(renderer, camera);
+
+    //Start Game Clock
+    var clock = new THREE.Clock();
+    clock.start();
 
     //////////////////////////////////////////////////////////////////////////////////
     //		default 3 points lightning					//
@@ -39,9 +42,9 @@ require([], function(){
     //////////////////////////////////////////////////////////////////////////////////
 
     //TODO: Add Objects Here
+    /*Snowman*/
     var snowman = new Snowman();
     scene.add(snowman);
-
 
     camera.lookAt(new THREE.Vector3(0, 5, 0));
     //////////////////////////////////////////////////////////////////////////////////
@@ -52,14 +55,6 @@ require([], function(){
         mouse.x	= ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
         mouse.y	= 1 - ((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height);
     }, false);
-
-    /*
-    onRenderFcts.push(function(delta, now){
-        camera.position.x += (mouse.x*30 - camera.position.x) * (delta*3);
-        camera.position.y += (mouse.y*30 - camera.position.y) * (delta*3);
-        camera.lookAt( scene.position )
-    });
-    */
 
     //////////////////////////////////////////////////////////////////////////////////
     //		Button Controls							//
@@ -87,22 +82,6 @@ require([], function(){
                 snowman.rotateY(0.2);
                 snowman.position.x += 1;
                 break;
-            case 48:
-                break;
-            case 70:
-                break;
-            case 71:
-                break;
-            case 80:
-                break;
-            case 37:
-                break;
-            case 38:
-                break;
-            case 39:
-                break;
-            case 40:
-                break;
         }
     }
 
@@ -115,12 +94,12 @@ require([], function(){
     //////////////////////////////////////////////////////////////////////////////////
 
     /*Ground*/
-    var grass_tex = THREE.ImageUtils.loadTexture("Images/snow.jpg");
-    grass_tex.repeat.set(4,4);
-    grass_tex.wrapS = THREE.RepeatWrapping;
-    grass_tex.wrapT = THREE.RepeatWrapping;
+    var snowTex = THREE.ImageUtils.loadTexture("Images/snow.jpg");
+    snowTex.repeat.set(4,4);
+    snowTex.wrapS = THREE.RepeatWrapping;
+    snowTex.wrapT = THREE.RepeatWrapping;
     var groundPlane = new THREE.PlaneBufferGeometry(40, 40, 10, 10);
-    var groundMat = new THREE.MeshPhongMaterial({color:0xDBFFFF, ambient:0xDBFFFF, map:grass_tex});
+    var groundMat = new THREE.MeshPhongMaterial({color:0xDBFFFF, ambient:0xDBFFFF, map:snowTex});
     var ground = new THREE.Mesh (groundPlane, groundMat);
     ground.rotateX(THREE.Math.degToRad(-90));
     scene.add (ground);
@@ -131,6 +110,17 @@ require([], function(){
     onRenderFcts.push(function(){
         renderer.render( scene, camera );
     });
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //		Lose Animation					//
+    //////////////////////////////////////////////////////////////////////////////////
+
+    var gameLost = function()
+    {
+        console.log("Lost");
+        snowman.position.y -= 1;
+        snowman.rotateY(1.5);
+    };
 
     //////////////////////////////////////////////////////////////////////////////////
     //		Rendering Loop runner						//
@@ -145,6 +135,16 @@ require([], function(){
         lastTimeMsec	= nowMsec;
 
         //TODO: Add Movement and Collision Checking Here
+
+        /*Check to see if character is off map*/
+        if(snowman.position.x > 20 || snowman.position.x < -20 || snowman.position.z > 20
+            || snowman.position.z < -20) {
+            gameLost();
+        }
+        else
+        {
+            document.getElementById("Score").textContent = "Score: " + clock.getElapsedTime() + " sec";
+        }
 
         /*Add Code Inside if you want to be able to pause it*/
         if(!pauseAnim) {
