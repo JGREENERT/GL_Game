@@ -94,7 +94,7 @@ require([], function(){
     //////////////////////////////////////////////////////////////////////////////////
 
     /*Ground*/
-    var snowTex = THREE.ImageUtils.loadTexture("Images/snow.jpg");
+    var snowTex = THREE.ImageUtils.loadTexture("Images/snow2.jpg");
     snowTex.repeat.set(4,4);
     snowTex.wrapS = THREE.RepeatWrapping;
     snowTex.wrapT = THREE.RepeatWrapping;
