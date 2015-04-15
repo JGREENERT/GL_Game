@@ -9,6 +9,10 @@ require([], function(){
     renderer.setSize( CANVAS_WIDTH, CANVAS_HEIGHT );
     var gbox = document.getElementById('graphicsbox');
     var pauseAnim = false;
+    var array = [];
+    var dropSpeed = .12;
+    var addFire = false;
+    var snowmanHit = false;
     document.body.appendChild(gbox);
     gbox.appendChild( renderer.domElement );
 
@@ -44,6 +48,15 @@ require([], function(){
     //TODO: Add Objects Here
     /*Snowman*/
     var snowman = new Snowman();
+
+    // var raindrop = new Raindrop();
+    array.push(new Raindrop());
+    for(var i = 0; i < 1; i++){
+        array[i].position.y = 25+i;
+        array[i].position.z = Math.random() * 30 - 10;
+        array[i].position.x = Math.random() * 30 - 10;
+        scene.add(array[i]);
+    }
     scene.add(snowman);
 
     camera.lookAt(new THREE.Vector3(0, 5, 0));
@@ -122,6 +135,11 @@ require([], function(){
         snowman.rotateY(1.5);
     };
 
+    var gameHitLost = function(){
+        snowman.rotateY(1.5);
+        document.getElementById("endMsg").innerHTML = "Game Over!";
+    }
+
     //////////////////////////////////////////////////////////////////////////////////
     //		Rendering Loop runner						//
     //////////////////////////////////////////////////////////////////////////////////
@@ -136,12 +154,25 @@ require([], function(){
 
         //TODO: Add Movement and Collision Checking Here
 
+        for(var i = 0; i < array.length; i++){
+            if(array[i].position.y < 4 && array[i].position.x -2 < snowman.position.x &&
+                array[i].position.x +2 > snowman.position.x && array[i].position.z -2 < snowman.position.z &&
+                array[i].position.z +2 > snowman.position.z){
+                snowmanHit = true;
+            }
+        }
         /*Check to see if character is off map*/
         if(snowman.position.x > 20 || snowman.position.x < -20 || snowman.position.z > 20
             || snowman.position.z < -20) {
             gameLost();
         }
         else
+        if(snowmanHit){
+            for(var i = 0; i < array.length; i++){
+                scene.remove(array[i]);
+            }
+            gameHitLost();
+        } else
         {
             document.getElementById("Score").textContent = "Score: " + clock.getElapsedTime() + " sec";
         }
@@ -149,9 +180,32 @@ require([], function(){
         /*Add Code Inside if you want to be able to pause it*/
         if(!pauseAnim) {
 
-            }
+        }
 
         // call each update function
+        for(var i = 0; i < array.length; i++){
+            if(array[i].position.y >= 0) {
+                array[i].position.y -= dropSpeed;
+            } else{
+                array[i].position.y = 25;
+                array[i].position.z = Math.random() * 30 - 10;
+                array[i].position.x = Math.random() * 30 - 10;
+            }
+        }
+        if(clock.getElapsedTime() % 10 < 1){
+            if(addFire) {
+                dropSpeed += .03;
+                array.push(new Raindrop());
+                array[array.length-1].position.y = 25 + i;
+                array[array.length-1].position.z = Math.random() * 30 - 10;
+                array[array.length-1].position.x = Math.random() * 30 - 10;
+                scene.add(array[array.length-1]);
+                addFire = false;
+            }
+        }
+        if(clock.getElapsedTime() % 10 > 1){
+            addFire = true;
+        }
         onRenderFcts.forEach(function(f){
             f(deltaMsec/1000, nowMsec/1000)
         });
