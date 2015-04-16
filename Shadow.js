@@ -11,7 +11,7 @@ Shadow = function() {
             specular: mgrSpec.getHex(),
             shininess: 27.897400
         });
-        var shadowGeo = new THREE.CylinderGeometry(2, 2, 0.1, 30);
+        var shadowGeo = new THREE.CylinderGeometry(2.5, 2.5, 0.1, 30);
         var shadow = new THREE.Mesh(shadowGeo, shadowMat);
 
         return shadow;

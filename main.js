@@ -12,9 +12,10 @@ require([], function(){
     var pauseAnim = false;
     var array = [];
     var dropSpeed = .35;
+    var shadowShrinkSpeed = .02;
 
     var shadowArray = [];
-    var diskArray = [];
+    var shadowSize = [];
 
     var addFire = false;
     var snowmanHit = false;
@@ -73,11 +74,13 @@ require([], function(){
     /*Fireballs*/
     array.push(new Fireball(fireballTex));
     shadowArray.push(new Shadow());
+    shadowSize.push(2.5);
     for(var i = 0; i < 1; i++){
         array[i].position.y = 25+i;
 
         array[i].position.z = Math.random() * 30 - 10;
         array[i].position.x = Math.random() * 30 - 10;
+
 
         shadowArray[i].position.y = 0.05;
         shadowArray[i].position.x = array[i].position.x;
@@ -236,6 +239,8 @@ require([], function(){
         for(var i = 0; i < array.length; i++){
             if(array[i].position.y >= 0) {
                 array[i].position.y -= dropSpeed;
+                shadowSize[i] -= shadowShrinkSpeed;
+                shadowArray[i].scale.set(shadowSize[i], 1,shadowSize[i]);
             } else{
                 array[i].position.y = 25;
                 array[i].position.z = Math.random() * 30 - 10;
@@ -244,6 +249,7 @@ require([], function(){
                 shadowArray[i].position.y = 0.05;
                 shadowArray[i].position.x = array[i].position.x;
                 shadowArray[i].position.z = array[i].position.z;
+                shadowSize[i] = 2.5;
 
             }
         }
@@ -253,6 +259,7 @@ require([], function(){
 
                 array.push(new Fireball(fireballTex));
                 shadowArray.push(new Shadow());
+                shadowSize.push(2.5);
                 array[array.length-1].position.y = 25 + i;
 
                 array[array.length-1].position.z = Math.random() * 30 - 10;
