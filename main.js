@@ -7,10 +7,15 @@ require([], function(){
     var renderer	= new THREE.WebGLRenderer();
     var CANVAS_WIDTH = 600, CANVAS_HEIGHT = 400;
     renderer.setSize( CANVAS_WIDTH, CANVAS_HEIGHT );
+    renderer.shadowMapEnabled = true;
     var gbox = document.getElementById('graphicsbox');
     var pauseAnim = false;
     var array = [];
     var dropSpeed = .35;
+
+    var shadowArray = [];
+    var diskArray = [];
+
     var addFire = false;
     var snowmanHit = false;
     document.body.appendChild(gbox);
@@ -41,6 +46,18 @@ require([], function(){
     ambientLight.position.set(16, -23, -15);
     scene.add( ambientLight);
 
+    var spotLight	= new THREE.SpotLight('red', 1, 0, Math.PI / 6);
+    spotLight.castShadow = true;
+    spotLight.position.set(0, 45, 0);
+    spotLight.intensity = 5;
+    scene.add( spotLight );
+    scene.add ( new THREE.SpotLightHelper (spotLight, 0.2));
+
+    //var frontLight	= new THREE.DirectionalLight(0xffffff, 1);
+    //frontLight.position.set(10, 35, 0.0);
+    //scene.add( frontLight );
+    //scene.add ( new THREE.DirectionalLightHelper (frontLight, 1));
+
     //////////////////////////////////////////////////////////////////////////////////
     //		add an object and make it move					//
     //////////////////////////////////////////////////////////////////////////////////
@@ -55,11 +72,20 @@ require([], function(){
 
     /*Fireballs*/
     array.push(new Fireball(fireballTex));
+    shadowArray.push(new Shadow());
     for(var i = 0; i < 1; i++){
         array[i].position.y = 25+i;
+
         array[i].position.z = Math.random() * 30 - 10;
         array[i].position.x = Math.random() * 30 - 10;
+
+        shadowArray[i].position.y = 0.05;
+        shadowArray[i].position.x = array[i].position.x;
+        shadowArray[i].position.z = array[i].position.z;
+
         scene.add(array[i]);
+        scene.add(shadowArray[i]);
+
     }
     scene.add(snowman);
 
@@ -198,6 +224,7 @@ require([], function(){
         if(snowmanHit){
             for(var i = 0; i < array.length; i++){
                 scene.remove(array[i]);
+                scene.remove(shadowArray[i]);
             }
             gameLost(false);
         } else
@@ -213,16 +240,31 @@ require([], function(){
                 array[i].position.y = 25;
                 array[i].position.z = Math.random() * 30 - 10;
                 array[i].position.x = Math.random() * 30 - 10;
+
+                shadowArray[i].position.y = 0.05;
+                shadowArray[i].position.x = array[i].position.x;
+                shadowArray[i].position.z = array[i].position.z;
+
             }
         }
         if(clock.getElapsedTime() % 10 < 1){
             if(addFire) {
                 dropSpeed += .03;
+
                 array.push(new Fireball(fireballTex));
+                shadowArray.push(new Shadow());
                 array[array.length-1].position.y = 25 + i;
+
                 array[array.length-1].position.z = Math.random() * 30 - 10;
                 array[array.length-1].position.x = Math.random() * 30 - 10;
+
+
+                shadowArray[shadowArray.length-1].position.y = 0.05;
+                shadowArray[shadowArray.length-1].position.x = array[array.length-1].position.x;
+                shadowArray[shadowArray.length-1].position.z = array[array.length-1].position.z;
+
                 scene.add(array[array.length-1]);
+                scene.add(shadowArray[shadowArray.length-1]);
                 addFire = false;
             }
         }
