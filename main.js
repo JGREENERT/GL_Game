@@ -128,25 +128,50 @@ require([], function(){
     //		Lose Animation					//
     //////////////////////////////////////////////////////////////////////////////////
 
-    var gameLost = function()
+    var gameLost = function(type)
     {
-        console.log("Lost");
-        snowman.position.y -= 1;
-        snowman.rotateY(1.5);
+        console.log(type);
+        if(type)
+        {
+            snowman.position.y -= 1;
+            snowman.rotateY(1.5);
+            if(snowman.position.y < -100)
+            {
+                setAlert();
+            }
+        }
+        else
+        {
+            console.log("here");
+            snowman.position.z -= 1;
+            snowman.rotateY(1.5);
+            if(snowman.position.z < -20) {
+                snowman.position.y -= 1;
+                if(snowman.position.y < -100)
+                    setAlert();
+            }
+        }
     };
 
-    var gameHitLost = function(){
-        snowman.rotateY(1.5);
-        document.getElementById("endMsg").innerHTML = "Game Over!";
-    }
+    var setAlert = function()
+    {
+        gameOver = true;
+        if(!alert("Game Over"))
+            window.location.reload();
+    };
+
 
     //////////////////////////////////////////////////////////////////////////////////
     //		Rendering Loop runner						//
     //////////////////////////////////////////////////////////////////////////////////
     var lastTimeMsec= null;
+    var gameOver = false;
     requestAnimationFrame(function animate(nowMsec){
 
-        requestAnimationFrame( animate );
+        if(!gameOver)
+            requestAnimationFrame( animate );
+        else
+            return;
 
         lastTimeMsec	= lastTimeMsec || nowMsec-1000/60;
         var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec);
@@ -164,14 +189,14 @@ require([], function(){
         /*Check to see if character is off map*/
         if(snowman.position.x > 20 || snowman.position.x < -20 || snowman.position.z > 20
             || snowman.position.z < -20) {
-            gameLost();
+            gameLost(true);
         }
         else
         if(snowmanHit){
             for(var i = 0; i < array.length; i++){
                 scene.remove(array[i]);
             }
-            gameHitLost();
+            gameLost(false);
         } else
         {
             document.getElementById("Score").textContent = "Score: " + clock.getElapsedTime() + " sec";
