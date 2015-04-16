@@ -10,7 +10,7 @@ require([], function(){
     var gbox = document.getElementById('graphicsbox');
     var pauseAnim = false;
     var array = [];
-    var dropSpeed = .12;
+    var dropSpeed = .35;
     var addFire = false;
     var snowmanHit = false;
     document.body.appendChild(gbox);
@@ -46,11 +46,15 @@ require([], function(){
     //////////////////////////////////////////////////////////////////////////////////
 
     //TODO: Add Objects Here
+    /*Loading Fireball Texture*/
+    var fireballTex = THREE.ImageUtils.loadTexture("Images/fireball.jpg");
+    console.log(fireballTex);
+
     /*Snowman*/
     var snowman = new Snowman();
 
-    // var raindrop = new Raindrop();
-    array.push(new Raindrop());
+    /*Fireballs*/
+    array.push(new Fireball(fireballTex));
     for(var i = 0; i < 1; i++){
         array[i].position.y = 25+i;
         array[i].position.z = Math.random() * 30 - 10;
@@ -81,19 +85,19 @@ require([], function(){
         switch (e.keyCode) {
             case 87: // W
                 snowman.rotateY(0.2);
-                snowman.position.z -= 1;
+                snowman.position.z -= 2;
                 break;
             case 83: //S
                 snowman.rotateY(0.2);
-                snowman.position.z += 1;
+                snowman.position.z += 2;
                 break;
             case 65: //A
                 snowman.rotateY(0.2);
-                snowman.position.x -= 1;
+                snowman.position.x -= 2;
                 break;
             case 68: // D
                 snowman.rotateY(0.2);
-                snowman.position.x += 1;
+                snowman.position.x += 2;
                 break;
         }
     }
@@ -105,7 +109,6 @@ require([], function(){
     //////////////////////////////////////////////////////////////////////////////////
     //		Texture Mapping						//
     //////////////////////////////////////////////////////////////////////////////////
-
     /*Ground*/
     var snowTex = THREE.ImageUtils.loadTexture("Images/snow2.jpg");
     snowTex.repeat.set(4,4);
@@ -202,11 +205,6 @@ require([], function(){
             document.getElementById("Score").textContent = "Score: " + clock.getElapsedTime() + " sec";
         }
 
-        /*Add Code Inside if you want to be able to pause it*/
-        if(!pauseAnim) {
-
-        }
-
         // call each update function
         for(var i = 0; i < array.length; i++){
             if(array[i].position.y >= 0) {
@@ -220,7 +218,7 @@ require([], function(){
         if(clock.getElapsedTime() % 10 < 1){
             if(addFire) {
                 dropSpeed += .03;
-                array.push(new Raindrop());
+                array.push(new Fireball(fireballTex));
                 array[array.length-1].position.y = 25 + i;
                 array[array.length-1].position.z = Math.random() * 30 - 10;
                 array[array.length-1].position.x = Math.random() * 30 - 10;
