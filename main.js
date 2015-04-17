@@ -212,9 +212,9 @@ require([], function(){
         //TODO: Add Movement and Collision Checking Here
 
         for(var i = 0; i < array.length; i++){
-            if(array[i].position.y < 4 && array[i].position.x -2 < snowman.position.x &&
-                array[i].position.x +2 > snowman.position.x && array[i].position.z -2 < snowman.position.z &&
-                array[i].position.z +2 > snowman.position.z){
+            if(array[i].position.y < 8 && array[i].position.x -4.5 < snowman.position.x &&
+                array[i].position.x +4 > snowman.position.x && array[i].position.z -4.5 < snowman.position.z &&
+                array[i].position.z +4 > snowman.position.z) {
                 snowmanHit = true;
             }
         }
@@ -243,8 +243,8 @@ require([], function(){
                 shadowArray[i].scale.set(shadowSize[i], 1,shadowSize[i]);
             } else{
                 array[i].position.y = 25;
-                array[i].position.z = Math.random() * 30 - 10;
-                array[i].position.x = Math.random() * 30 - 10;
+                array[i].position.z = Math.random() * 35 - 20;
+                array[i].position.x = Math.random() * 35 - 20;
 
                 shadowArray[i].position.y = 0.05;
                 shadowArray[i].position.x = array[i].position.x;
@@ -262,8 +262,8 @@ require([], function(){
                 shadowSize.push(2.5);
                 array[array.length-1].position.y = 25 + i;
 
-                array[array.length-1].position.z = Math.random() * 30 - 10;
-                array[array.length-1].position.x = Math.random() * 30 - 10;
+                array[array.length-1].position.z = Math.random() * 35 - 20;
+                array[array.length-1].position.x = Math.random() * 35 - 20;
 
 
                 shadowArray[shadowArray.length-1].position.y = 0.05;
